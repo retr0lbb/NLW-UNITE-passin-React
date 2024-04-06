@@ -1,9 +1,11 @@
+import { AttendeeList } from "./components/attendee-list";
+import { Header } from "./components/header";
+
 export function App() {
   return (
-    <div 
-      className = "text-zinc-950 text-4xl font-bold decoration-fuchsia-700"
-    >
-      Hello world
+    <div className="max-w-[1216px] mx-auto py-5 flex flex-col gap-5">
+      <Header />
+      <AttendeeList />
     </div>
   )
 }
