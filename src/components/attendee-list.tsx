@@ -1,13 +1,14 @@
 import { Search, MoreHorizontal, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from "lucide-react"
+import { IconButton } from "./icon-button"
 
 export function AttendeeList(){
     return(
         <div className="flex flex-col gap-4">
             <div className="flex items-center gap-3 ">
                 <h1 className="text-2xl font-bold">Participantes</h1>
-                <div className="flex items-center px-3 w-72 py-1.5 border border-white/10 rounded-lg text-sm gap-3">
+                <div className="flex items-center px-3 w-72 py-1.5 border border-white/10 rounded-lg gap-3">
                     <Search className="size-4 text-emerald-300" />
-                    <input type="text" className="bg-transparent flex-1 outline-none" placeholder="Buscar participante..." />
+                    <input type="text" className="bg-transparent flex-1 outline-none h-auto border-0 p-0 text-sm" placeholder="Buscar participante..." />
                 </div>
             </div>
 
@@ -17,7 +18,7 @@ export function AttendeeList(){
                     <thead>
                         <tr className="border-b border-white/10">
                             <th style={{ width: 48 }} className="py-3 px-4 text-sm font-semibold text-left">
-                                <input type="checkbox" />
+                                <input type="checkbox" className="size-4 bg-black/20 rounded border border-white/10" />
                             </th>
                             <th className="py-3 px-4 text-sm font-semibold text-left">Código</th>
                             <th className="py-3 px-4 text-sm font-semibold text-left">Participante</th>
@@ -27,11 +28,11 @@ export function AttendeeList(){
                         </tr>
                     </thead>
                     <tbody>
-                        {Array.from({length: 8}).map((_, index) => {
+                        {Array.from({length: 8}).map((_, i) => {
                             return(
-                                <tr key={index} className="border-b border-white/10">
+                                <tr key={i} className="border-b border-white/10 hover:bg-white/5">
                                     <td className="py-3 px-4 text-sm text-zinc-300">
-                                        <input type="checkbox" />
+                                        <input type="checkbox" className="size-4 bg-black/20 rounded border border-white/10 accent-orange-400" />
                                     </td>
                                     <td className="py-3 px-4 text-sm text-zinc-300">123</td>
                                     <td className="py-3 px-4 text-sm text-zinc-300">
@@ -43,9 +44,9 @@ export function AttendeeList(){
                                     <td className="py-3 px-4 text-sm text-zinc-300">7 dia atrás</td>
                                     <td className="py-3 px-4 text-sm text-zinc-300">4 dias atrás</td>
                                     <td className="py-3 px-4 text-sm text-zinc-300">
-                                        <button className="bg-black/20 border border-white/10 rounded-md p-1.5">
+                                        <IconButton transparent>
                                             <MoreHorizontal className="size-4" />
-                                        </button>
+                                        </IconButton>
                                     </td>
                                 </tr>
                             )
@@ -60,18 +61,18 @@ export function AttendeeList(){
                                 <div className="inline-flex gap-8 items-center ">
                                     <span>Página 1 de 23</span>
                                     <div className=" flex gap-1.5">
-                                        <button className="bg-white/10 border border-white/10 rounded-md p-1.5">
+                                        <IconButton>
                                             <ChevronsLeft className="size-4" />
-                                        </button>
-                                        <button className="bg-white/10 border border-white/10 rounded-md p-1.5">
+                                        </IconButton>
+                                        <IconButton>
                                             <ChevronLeft className="size-4" />
-                                        </button>
-                                        <button className="bg-white/10 border border-white/10 rounded-md p-1.5">
+                                        </IconButton>
+                                        <IconButton>
                                             <ChevronRight className="size-4" />
-                                        </button>
-                                        <button className="bg-white/10 border border-white/10 rounded-md p-1.5">
+                                        </IconButton>
+                                        <IconButton>
                                             <ChevronsRight className="size-4" />
-                                        </button>
+                                        </IconButton>
                                     </div>
                                 </div>
                             </td>
