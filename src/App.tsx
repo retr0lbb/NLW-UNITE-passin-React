@@ -1,7 +1,9 @@
-function App() {
+export function App() {
   return (
-    <div>Hello world</div>    
+    <div 
+      className = "text-zinc-950 text-4xl font-bold decoration-fuchsia-700"
+    >
+      Hello world
+    </div>
   )
 }
-
-export default App
