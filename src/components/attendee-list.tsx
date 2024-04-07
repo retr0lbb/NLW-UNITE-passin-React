@@ -19,6 +19,23 @@ export function AttendeeList(){
     const [search, setSearch] = useState("")
     const [page, setPage] = useState(1)
 
+    const totalPages = Math.ceil(attendees.length / 10)
+
+
+    function goToNextPage(){
+        setPage(prev => prev + 1)
+        
+    }
+    function goToPreviusPage(){
+            setPage(prev => prev - 1)
+    }
+    function goToLastPage(){
+        setPage(totalPages)
+    }
+    function goToFirstPage(){
+        setPage(1)
+    }
+
     return(
         <div className="flex flex-col gap-4">
             <div className="flex items-center gap-3 ">
@@ -74,18 +91,18 @@ export function AttendeeList(){
                         </TableCell>
                         <TableCell className="text-right" colSpan={3}>
                             <div className="inline-flex gap-8 items-center ">
-                                <span>Página {page} de {Math.ceil(attendees.length / 10)}</span>
+                                <span>Página {page} de {totalPages}</span>
                                 <div className=" flex gap-1.5">
-                                    <IconButton>
+                                    <IconButton onClick={goToFirstPage} disabled={page === 1}>
                                         <ChevronsLeft className="size-4" />
                                     </IconButton>
-                                    <IconButton>
+                                    <IconButton onClick={goToPreviusPage} disabled={page <= 1}>
                                         <ChevronLeft className="size-4" />
                                     </IconButton>
-                                    <IconButton>
+                                    <IconButton onClick={goToNextPage} disabled={page === totalPages}>
                                         <ChevronRight className="size-4" />
                                     </IconButton>
-                                    <IconButton>
+                                    <IconButton onClick={goToLastPage} disabled={page === totalPages}>
                                         <ChevronsRight className="size-4" />
                                     </IconButton>
                                 </div>
