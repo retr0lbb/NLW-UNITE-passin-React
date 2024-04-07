@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Search, MoreHorizontal, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from "lucide-react"
 import dayjs from "dayjs"
 import "dayjs/locale/pt-br"
@@ -8,32 +8,95 @@ import { Table } from "./table/table"
 import { TableHeader } from "./table/table-header"
 import { TableCell } from "./table/table-cell"
 import { TableRow } from "./table/table-row"
-import { attendees } from "../data/attendees"
 
 
 dayjs.extend(relativeTime)
 dayjs.locale("pt-br")
 
+interface AttendeeProps{
+    checkedInAt: string | null,
+    createdAt: string,
+    email: string,
+    id: number,
+    name: string
+}
+
 
 export function AttendeeList(){
-    const [search, setSearch] = useState("")
-    const [page, setPage] = useState(1)
+    const [search, setSearch] = useState(()=> {
+        const url = new URL(window.location.toString())
 
-    const totalPages = Math.ceil(attendees.length / 10)
+        if(url.searchParams.has("search")){
+            return url.searchParams.get("search") ?? ""
+        }
 
+        return ""
+    })
+    const [page, setPage] = useState(()=> {
+        const url = new URL(window.location.toString())
+
+        if(url.searchParams.has("page")){
+            return Number(url.searchParams.get("page"))
+        }
+
+        return 1
+    })
+
+    
+    const [total, setTotal] = useState(0)
+    const totalPages = Math.ceil(total / 10)
+    const [attendees, setAttendees] = useState<AttendeeProps[]>([])
+
+    function setCurrentSearch(search: string){
+        const url = new URL(window.location.toString())
+
+        url.searchParams.set("search", search)
+ 
+        window.history.pushState({}, "", url)
+
+        setSearch(search)
+    }
+
+    function setCurrentPage(page: number){
+        const url = new URL(window.location.toString())
+
+        url.searchParams.set("page", String(page))
+ 
+        window.history.pushState({}, "", url)
+
+        setPage(page)
+    }
+
+
+    useEffect(() => {
+        const url = new URL("http://localhost:3333/events/ea15b680-4105-4ec4-a420-dc0624421622/attendees")
+
+        url.searchParams.set("pageIndex", String(page - 1))
+
+        if(search.length > 0){
+            url.searchParams.set("query", search)
+        }
+
+        fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            setAttendees(data.attendees)
+            setTotal(data.attendeesAmount)
+        })
+    }, [page, search])
 
     function goToNextPage(){
-        setPage(prev => prev + 1)
-        
+       // setPage(prev => prev + 1)
+       setCurrentPage(page+ 1)
     }
     function goToPreviusPage(){
-            setPage(prev => prev - 1)
+        setCurrentPage(page - 1)
     }
     function goToLastPage(){
-        setPage(totalPages)
+        setCurrentPage(totalPages)
     }
     function goToFirstPage(){
-        setPage(1)
+        setCurrentPage(1)
     }
 
     return(
@@ -42,7 +105,11 @@ export function AttendeeList(){
                 <h1 className="text-2xl font-bold">Participantes</h1>
                 <div className="flex items-center px-3 w-72 py-1.5 border border-white/10 rounded-lg gap-3">
                     <Search className="size-4 text-emerald-300" />
-                    <input onChange={(e) => {setSearch(e.target.value)}} value={search} className="bg-transparent flex-1 outline-none h-auto border-0 p-0 text-sm" placeholder="Buscar participante..." />
+                    <input 
+                        onChange={(e) => {setCurrentSearch(e.target.value); setCurrentPage(1)}} 
+                        value={search} className="bg-transparent flex-1 outline-none focus:ring-0 h-auto border-0 p-0 text-sm" 
+                        placeholder="Buscar participante..." 
+                    />
                 </div>
             </div>
             
@@ -60,7 +127,7 @@ export function AttendeeList(){
                     </tr>
                 </thead>
                 <tbody>
-                    {attendees.slice((page - 1) *10, page *10).map((attendee) => {
+                    {attendees.map((attendee) => {
                         return(
                             <TableRow key={attendee.id}>
                                 <TableCell>
@@ -74,7 +141,9 @@ export function AttendeeList(){
                                 </div>
                                 </TableCell>
                                 <TableCell>{dayjs().to(attendee.createdAt)}</TableCell>
-                                <TableCell>{dayjs().to(attendee.checkedInAt)}</TableCell>
+                                <TableCell>{attendee.checkedInAt === null 
+                                    ? <span className="text-zinc-400">Não fez check-in</span>
+                                    : dayjs().to(attendee.checkedInAt) }</TableCell>
                                 <TableCell>
                                     <IconButton transparent>
                                         <MoreHorizontal className="size-4" />
@@ -87,7 +156,7 @@ export function AttendeeList(){
                 <tfoot>
                     <tr>
                         <TableCell colSpan={3}>
-                            Mostrando 10 de {attendees.length} items
+                            Mostrando {attendees.length} de {total} items
                         </TableCell>
                         <TableCell className="text-right" colSpan={3}>
                             <div className="inline-flex gap-8 items-center ">
