@@ -1,13 +1,18 @@
 import { Card } from "../components/dashbord-graphs/card"
 import {ChevronLeft} from "lucide-react"
+import { Link } from "react-router-dom"
+
 
 
 export const HomeDashboard: React.FC = () => {
     return(
         <main className="w-screen h-screen flex flex-col p-10 bg-zinc-900">
             <div className="flex items-center gap-2">
+                
+            <Link to={"/"}>
                 <ChevronLeft size={32} 
                 className="text-zinc-500 cursor-pointer transition-all hover:scale-105 hover:text-zinc-300"/>
+            </Link>
                 
                 <h1 className="text-5xl font-bold">Dashboard</h1>
             </div>
@@ -31,7 +36,7 @@ export const HomeDashboard: React.FC = () => {
 
                 <Card className="col-span-2 row-span-2" title="Percent of paying attendees" 
                 description="shows the percent of paying attendees" >
-                    <h1 className="text-9xl font-bold">76.90%</h1>
+                    <p>TXTR</p>
                 </Card>
 
                 <Card title="Attendee check-in rate" 
